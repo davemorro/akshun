@@ -8,13 +8,13 @@
 # your current location (as determined by your external IP Address)
 # 
 # Before running:
-# Update 'rdio_consumer_credentials.rb' with your Rdio developer credentials. See 
-# http://www.rdio.com/developers/
+# Rename 'rdio_consumer_credentials_EXAMPLE.rb' as 'rdio_consumer_credentials.rb' 
+# and add your Rdio developer credentials. See http://www.rdio.com/developers/
 # 
 # To run:
 # ruby akshun.rb
 #
-# The following override options are available:
+# The following options are available:
 #   -l: location   US or CA Zip Code or IP Address
 #   -r: range      Range in miles
 #   -f: from_date  From date (uses Chronic for nlp)
@@ -108,16 +108,22 @@ module Akshun
         end
         
         puts "Creating Playlist"
-        res = @@rdio.call('createPlaylist', {:name => "Akshun", :description => "Artists performing within #{range} of #{location} between #{from.strftime("%A %B %d, %Y")} and #{to.strftime("%A %B %d, %Y")}", :isPublished => "true", :tracks => ""})
+        res = @@rdio.call('createPlaylist', {
+            :name => "Akshun", 
+            :description => "Artists performing within #{range} of #{location} between #{from.strftime("%A %B %d, %Y")} and #{to.strftime("%A %B %d, %Y")}", 
+            :isPublished => "true", 
+            :tracks => ""
+        })
         
         return res["result"]["key"]
     end
     
     def self.add_to_playlist(track_keys, playlist_key)
         puts "Adding #{track_keys.size} tracks to Akshun playlist"
-        res = @@rdio.call('addToPlaylist', {:playlist => playlist_key, :tracks => track_keys})
-        
-        puts res
+        res = @@rdio.call('addToPlaylist', {
+            :playlist => playlist_key, 
+            :tracks => track_keys
+        })
     end
     
     def self.check_authorization
